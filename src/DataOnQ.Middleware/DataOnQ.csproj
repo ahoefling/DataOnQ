@@ -9,4 +9,12 @@
 		<WarningsAsErrors />
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\DataOnQ.Abstractions\DataOnQ.Abstractions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Middleware\" />
+	</ItemGroup>
+
 </Project>
