@@ -15,6 +15,14 @@
 
 	<ItemGroup>
 	  <Folder Include="Middleware\" />
+	  <Folder Include="Platforms\Android\" />
+	  <Folder Include="Platforms\iOS\" />
+	  <Folder Include="Platforms\UWP\" />
+	  <Folder Include="Platforms\Xamarin.Forms\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
 	</ItemGroup>
 
 </Project>
