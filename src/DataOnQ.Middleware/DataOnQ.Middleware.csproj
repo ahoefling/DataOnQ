@@ -6,7 +6,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		 <WarningsAsErrors />
+		<WarningsAsErrors />
 	</PropertyGroup>
 
 </Project>
