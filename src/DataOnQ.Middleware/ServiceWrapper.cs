@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq.Expressions;
 using DataOnQ.Abstractions;
+using DataOnQ.Middleware;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DataOnQ.Middleware
+namespace DataOnQ.Core
 {
-	internal class ServiceWrapper<TService>
+	public class ServiceWrapper<TService>
 	{
 		protected IServiceHandler Middleware { get; }
-		public ServiceWrapper(IServiceHandler middleware)
+		public ServiceWrapper()
 		{
-			Middleware = middleware;
+			Middleware = DataOnQ.Container.GetService<IServiceHandler>();
 		}
 
 		protected virtual T Proxy<T>(Expression<Func<TService, object>> action)

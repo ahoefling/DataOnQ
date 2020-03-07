@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using DataOnQ.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,8 +18,32 @@ namespace DataOnQ.Core
 	// DataOnQ.HostBuilder<Startup>()
 	//		  .BuildContainer(c => new PrismDependencyBuilder())
 	//		  .Start()
+
+	public interface IRegistrationHandler
+	{
+		IRegistrationHandlerFrom From<T>();
+	}
+
+	public interface IRegistrationHandlerFrom
+	{
+		void To<T>();
+	}
+
 	public static class DataOnQ
 	{
+		public static IRegistrationHandler RegisterHandler<THandler>()
+		{
+			return null;
+		}
+
+
+
+
+
+
+
+
+
 		public static IHostBuilder HostBuilder<TStartup>()
 			where TStartup : IDataOnQStartup
 		{
@@ -32,7 +55,7 @@ namespace DataOnQ.Core
 			return new HostBuilder(startup);
 		}
 
-		public static dynamic Platform { get; set; }
+		internal static IServiceProvider Container { get; set; }
 	}
 
 	public class HostBuilder : IHostBuilder
@@ -44,6 +67,8 @@ namespace DataOnQ.Core
 			_startupCollection = new List<IDataOnQStartup>();
 			_startupCollection.Add(startup);
 		}
+
+		public event EventHandler<ServiceProviderEventArgs> ContainerInitialized;
 
 		public IHostBuilder AddStartup(IDataOnQStartup startup)
 		{
@@ -74,26 +99,30 @@ namespace DataOnQ.Core
 
 			foreach (var startup in _startupCollection)
 				startup.ConfigureServices(_services);
+
+			// this needs to be stored as an internal container somewhere
+			DataOnQ.Container = _services.BuildServiceProvider(); // is this still needed if we have an event to get the container?
+
+			if (ContainerInitialized != null)
+				ContainerInitialized.Invoke(this, new ServiceProviderEventArgs(DataOnQ.Container));
 		}
-	}
-	
-
-	public interface IHostBuilder
-	{
-		void Start();
-	}
-
-	public interface IDependencyBuilder
-	{
-		IServiceCollection BuildServiceCollection();
 	}
 
 	public class DefaultDependencyBuilder : IDependencyBuilder
 	{
+		IServiceCollection _collection;
+		public IServiceProvider BuildProvider()
+		{
+			if (_collection == null)
+				return null;
+
+			return _collection.BuildServiceProvider();
+		}
+
 		public IServiceCollection BuildServiceCollection()
 		{
-			// TODO - this should use the microsoft.extensions IServiceProvider
-			throw new NotImplementedException();
+			_collection = new ServiceCollection();
+			return _collection;
 		}
 	}
 }

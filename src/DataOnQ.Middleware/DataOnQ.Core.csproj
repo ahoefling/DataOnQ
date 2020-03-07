@@ -8,21 +8,23 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsAsErrors />
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\DataOnQ.Abstractions\DataOnQ.Abstractions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Middleware\" />
-	  <Folder Include="Platforms\Android\" />
-	  <Folder Include="Platforms\iOS\" />
-	  <Folder Include="Platforms\UWP\" />
-	  <Folder Include="Platforms\Xamarin.Forms\" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+		<Compile Remove="**\Platforms\**\*.cs" />
+		<None Include="**\Platforms\**\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'XAMARIN_FORMS'">
+		<Compile Include="**\Platforms\Xamarin.Forms\**\*.cs" />
+		<PackageReference Include="Xamarin.Forms" Version="4.1.0.555618" />
 	</ItemGroup>
 
 </Project>
